@@ -16,6 +16,10 @@ Route::group(['middleware' => 'admin'], function() {
 
 	Route::get('dashboard', 'DashboardController@dashboard')->name('admin.dashboard');
 
+		Route::group(['prefix' => 'common'], function() {
+			Route::get('pdfview/{path}', 'CommonController@ShowPdfFile')->name('admin.common.pdf.viewer');
+		});
+
 		Route::group(['prefix' => 'report'], function() {
 			Route::get('/', 'ReportController@index')->name('admin.report.index');
 			Route::post('show', 'ReportController@Show')->name('admin.report.show');
@@ -92,4 +96,20 @@ Route::group(['middleware' => 'admin'], function() {
       		Route::get('index', 'SchoolDetailsController@index')->name('admin.school.details.index');
 			Route::post('store', 'SchoolDetailsController@store')->name('admin.school.details.store');
       	});
+
+      	//Document Types
+		Route::prefix('document-type')->group(function () {
+		    Route::get('dt-index', 'DocumentTypeController@index')->name('admin.document.type');
+		    Route::get('dt-edit/{id}', 'DocumentTypeController@edit')->name('admin.document.type.edit');
+		    Route::post('dt-store/{id}', 'DocumentTypeController@store')->name('admin.document.type.store');
+		    Route::get('dt-delete/{id}', 'DocumentTypeController@delete')->name('admin.document.type.delete');
+		});
+
+		//Projects
+		Route::prefix('projects')->group(function () {
+		    Route::get('p-index', 'ProjectsController@index')->name('admin.projects.index');
+		    Route::get('p-form/{id}', 'ProjectsController@addform')->name('admin.projects.form');
+		    Route::post('p-store/{id}', 'ProjectsController@store')->name('admin.projects.store');
+		    Route::get('p-delete/{id}', 'ProjectsController@delete')->name('admin.projects.delete');
+		});
 });
