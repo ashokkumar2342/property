@@ -25,22 +25,96 @@
 @extends($include_page_extends)
 @section($include_page_section)
 <style>
-  #carousel-banner .carousel-inner {
+#carousel-banner .carousel-inner {
     height: 500px; /* Set carousel height to 600px */
-  }
+}
 
-  #carousel-banner .carousel-item img {
+#carousel-banner .carousel-item img {
     object-fit: cover; /* Ensure the images cover the area and maintain aspect ratio */
     height: 500px; /* Set height of carousel images to 600px */
-  }
+}
 
-  .carousel-caption {
+.carousel-caption {
     position: absolute;
     bottom: 20px;
     left: 50%;
     transform: translateX(-50%);
     text-align: center;
-  }
+}
+.info-links {
+    background: #f6fcf6;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+}
+
+.info-links li {
+    font-size: 16px;
+    margin-bottom: 10px;
+    font-weight: 500;
+}
+
+.check-icon {
+    color: green;
+    margin-right: 8px;
+    font-weight: bold;
+}
+
+.blink {
+    animation: blinker 1.5s linear infinite;
+    color: red;
+    font-weight: bold;
+    text-decoration: none;
+    margin-left: 5px;
+}
+
+@keyframes blinker {
+    50% { opacity: 0; }
+}
+
+/* Section Title Base */
+.project-section-title {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 3rem;
+    font-weight: 700;
+    color: #1c3f6c;
+    letter-spacing: 1.2px;
+    position: relative;
+    display: inline-block;
+    text-transform: uppercase;
+    background: linear-gradient(90deg, #1c3f6c, #2980b9);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: fadeInUp 1s ease-out;
+}
+
+/* Accent Word Styling */
+.project-section-title .text-accent {
+    color: #e63946;
+    font-weight: 800;
+}
+
+/* Optional Icon Before Title */
+.highlight-icon {
+    font-size: 1.8rem;
+    color: #34a853;
+    margin-right: 10px;
+    vertical-align: middle;
+}
+
+/* Fade-in Animation */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+
 </style>
 <main class="main"><!-- Editable Banner Section with Carousel -->
   <main class="main">
@@ -117,28 +191,49 @@
   </section><!-- /Editable Banner Section -->
 
 <!-- Hero Section -->
-<section id="hero" class="hero section">
+<section class="section bg-gradient py-5">
 
     <div class="container">
         <div class="hero-wrapper row g-4">
 
             <div class="col-lg-7 hero-content">
-                <span class="editable" data-section="hero_label">
-                    {!! DB::table('blade_contents')->where('section','hero_label')->value('content') ?? 'Dream Homes Await' !!}
-                </span>
-
-                <h1 class="editable" data-section="hero_title">
-                    {!! DB::table('blade_contents')->where('section','hero_title')->value('content') ?? 'Find Your Ideal Property with Expert Guidance' !!}
+                <h1 class="project-section-title">
+                    <span class="highlight-icon">📌</span> Ongoing <span class="text-accent">Projects</span>
                 </h1>
+                <!-- ✅ Links Section -->
+                <div class="info-links p-3 mt-4 bg-white shadow-lg rounded-lg">
+                    <ul class="list-unstyled mb-0">
+                        <li>
+                            <span class="check-icon">✔</span> 
+                            INDRI MASTER PLAN 2031 
+                            <a href="{{route('template.registration',[1,1])}}" class="blink">→CLICK HERE</a>
+                        </li>
+                        <li>
+                            <span class="check-icon">✔</span> 
+                            PROJECT BROCHURE 
+                            <a href="{{route('template.registration',[1,1])}}" class="blink">→CLICK HERE</a>
+                        </li>
+                        <li>
+                            <span class="check-icon">✔</span> 
+                            RERA CERTIFICATE 
+                            <a href="{{route('template.registration',[1,1])}}" class="blink">→CLICK HERE</a>
+                        </li>
+                        <li>
+                            <span class="check-icon">✔</span> 
+                            PROJECT LAYOUT 
+                            <a href="{{route('template.registration',[1,1])}}" class="blink">→CLICK HERE</a>
+                        </li>
+                    </ul>
+                </div>
+                <!-- ✅ Links Section End -->
 
-                <p class="editable" data-section="hero_paragraph">
-                    {!! DB::table('blade_contents')->where('section','hero_paragraph')->value('content') ?? 'Ut enim ad minim veniam...' !!}
-                </p>
             </div>
 
             <div class="col-lg-5 hero-visual">
                 <div class="editable-img" data-section="hero_image_1">
-                    <img src="{{ asset(DB::table('blade_contents')->where('section','hero_image_1')->value('content') ?? 'temp_5/assets/img/real-estate/property-exterior-8.webp') }}" class="img-fluid" alt="Hero Image">
+                    <div class="image-overlay">
+                        <img src="{{ asset(DB::table('blade_contents')->where('section','hero_image_1')->value('content') ?? 'temp_5/assets/img/real-estate/property-exterior-8.webp') }}" class="img-fluid rounded-lg shadow-xl" alt="Hero Image">
+                    </div>
                 </div>
             </div>
 
@@ -146,6 +241,9 @@
     </div>
 
 </section>
+
+
+
 
 <!-- About Section -->
 <section id="home-about" class="home-about section">
