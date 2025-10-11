@@ -413,10 +413,12 @@ class TemplateController extends Controller
             if (!$user) {
                 // 2️⃣ Create new user
                 $user = Admin::create([
-                    'name' => $request->applicant_name,
+                    'first_name' => $request->applicant_name,
+                    'last_name' => $request->applicant_name,
                     'email' => $request->email,
                     'mobile' => $request->phone_number,
                     'password' => Hash::make(rand(100000, 999999)), // random password
+                    'role_id' => 3,
                     'status' => 1,
                 ]);
             }
