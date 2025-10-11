@@ -51,9 +51,9 @@ $rs_school_detail = App\Helper\WebHelper::getSchoolDetail();
                             </div>
                         @endif
 
-                        <form action="{{ route('property.register') }}" method="POST" class="mt-4">
-                            {{ csrf_field() }}
-
+                        <form action="{{ route('template.registration.submit') }}" method="post" button-click="btn_close"  enctype="multipart/form-data">
+                         {{ csrf_field() }}
+                            <input type="hidden" name="project_id">
                             <div class="row g-3">
                                 <div class="col-md-6">
                                     <label class="form-label">Applicant Name</label>
@@ -126,7 +126,7 @@ $rs_school_detail = App\Helper\WebHelper::getSchoolDetail();
                                     </select>
                                 </div>
 
-                                <div class="col-md-6">
+                             {{--    <div class="col-md-6">
                                     <label class="form-label">Plot Size</label>
                                     <select name="size" class="form-select rounded-pill" required>
                                         <option value="" disabled {{ old('size') ? '' : 'selected' }}>Select Size</option>
@@ -134,7 +134,7 @@ $rs_school_detail = App\Helper\WebHelper::getSchoolDetail();
                                         <option value="160.167" {{ old('size') == '160.167' ? 'selected' : '' }}>160.167</option>
                                         <option value="140.562" {{ old('size') == '140.562' ? 'selected' : '' }}>140.562</option>
                                     </select>
-                                </div>
+                                </div> --}}
 
                                 <div class="col-12">
                                     <div class="form-check">
@@ -147,7 +147,7 @@ $rs_school_detail = App\Helper\WebHelper::getSchoolDetail();
 
                                 <div class="col-12">
                                     <button type="submit" class="btn btn-success w-100 rounded-pill py-2 fw-bold shadow-sm">
-                                        Submit &amp; Pay
+                                        Submit
                                     </button>
                                 </div>
                             </div>

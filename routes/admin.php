@@ -4,13 +4,12 @@
 Route::get('login', 'Auth\LoginController@login')->name('admin.login');
 Route::post('login-post', 'Auth\LoginController@loginPost')->name('admin.login.post');
 Route::get('logout', 'Auth\LoginController@logout')->name('admin.logout.get');
-
-
-
+Route::get('loginwithotp', 'Auth\LoginController@loginwithotp')->name('user.login');
+Route::post('user-login-post', 'Auth\LoginController@userloginPost')->name('user.login.post');
+Route::get('user-otp-form/{mobile}', 'Auth\LoginController@otpForm')->name('admin.otp.form');
+Route::post('user-verifyOtp/{mobile}', 'Auth\LoginController@verifyOtp')->name('admin.verify.otp');
 
 Route::group(['middleware' => 'admin'], function() {
-	
-
     Route::post('blade/update', 'BladeEditorController@updateContent')->name('admin.blade.update');
     Route::post('blade/upload-image', 'BladeEditorController@uploadImage')->name('admin.blade.uploadImage');
 

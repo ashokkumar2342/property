@@ -35,7 +35,7 @@
   
 </head>
 
-<body class="index-page">
+<body class="index-page" id="body_id">
 
   <header id="header" class="header d-flex align-items-center sticky-top py-2">
     <div class="container-fluid container-xl position-relative d-flex align-items-center justify-content-between">
@@ -65,11 +65,12 @@
           <li><a href="{{route('template.about',[1,$l_lang_type])}}">About</a></li>
           <li><a href="{{route('template.project',[1,$l_lang_type])}}">All Project</a></li>
           <li><a href="{{route('template.gallery',[1,$l_lang_type])}}">Gallery</a></li>
-          <li><a href="{{route('template.registration',[1,$l_lang_type])}}">Registration</a></li>
+          {{-- <li><a href="{{route('template.registration',[1,$l_lang_type])}}">Registration</a></li> --}}
           
 
          
           <li><a href="{{route('template.contact',[1,$l_lang_type])}}">Contact</a></li>
+          <li><a href="{{route('user.login')}}">Login</a></li>
         </ul>
         <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
       </nav>

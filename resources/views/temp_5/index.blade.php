@@ -203,26 +203,13 @@
                 <!-- ✅ Links Section -->
                 <div class="info-links p-3 mt-4 bg-white shadow-lg rounded-lg">
                     <ul class="list-unstyled mb-0">
-                        <li>
-                            <span class="check-icon">✔</span> 
-                            INDRI MASTER PLAN 2031 
-                            <a href="{{route('template.registration',[1,1])}}" class="blink">→CLICK HERE</a>
-                        </li>
-                        <li>
-                            <span class="check-icon">✔</span> 
-                            PROJECT BROCHURE 
-                            <a href="{{route('template.registration',[1,1])}}" class="blink">→CLICK HERE</a>
-                        </li>
-                        <li>
-                            <span class="check-icon">✔</span> 
-                            RERA CERTIFICATE 
-                            <a href="{{route('template.registration',[1,1])}}" class="blink">→CLICK HERE</a>
-                        </li>
-                        <li>
-                            <span class="check-icon">✔</span> 
-                            PROJECT LAYOUT 
-                            <a href="{{route('template.registration',[1,1])}}" class="blink">→CLICK HERE</a>
-                        </li>
+                        @foreach($result_rs as $project)
+                            <li>
+                                <span class="check-icon">✔</span> 
+                                {{ $project->name }}
+                               <a href="{{ route('template.registration', [1, 1, $project->id]) }}" class="blink">→ →Registration Open </a>
+                            </li>
+                        @endforeach
                     </ul>
                 </div>
                 <!-- ✅ Links Section End -->

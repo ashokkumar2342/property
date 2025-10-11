@@ -61,10 +61,11 @@ class ProjectsController extends Controller
         $start_date = MyFuncs::removeSpacialChr($request->start_date);
         $end_date = MyFuncs::removeSpacialChr($request->end_date);
         $document_id = intval(MyFuncs::removeSpacialChr($request->document_id));
+        $user_id = MyFuncs::getUserId();
 
         if ($rec_id == 0) {
             $final_path_attachment = '';
-            $rs_update = DB::select(DB::raw("INSERT into `projects`(`name`, `license_no`, `email_id`, `mobile_no`, `latitude`, `longitude`, `start_date`, `end_date`, `document_id`, `file_path`) values('$name', '$license_no', '$email_id', '$mobile_no', '$latitude', '$longitude', '$start_date', '$end_date', '$document_id', '$final_path_attachment');"));
+            $rs_update = DB::select(DB::raw("INSERT into `projects`(`user_id`,`name`, `license_no`, `email_id`, `mobile_no`, `latitude`, `longitude`, `start_date`, `end_date`, `document_id`, `file_path`) values('$user_id','$name', '$license_no', '$email_id', '$mobile_no', '$latitude', '$longitude', '$start_date', '$end_date', '$document_id', '$final_path_attachment');"));
             if ($request->hasFile('attachment')){
                 $rs_fatch = DB::select(DB::raw("SELECT max(`id`) as max_id from `projects`;"));
                 $rec_id = $rs_fatch[0]->max_id;

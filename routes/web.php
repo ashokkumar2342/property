@@ -3,6 +3,12 @@ use App\Model\User;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
  
+
+// Route::get('login', 'User\Auth\LoginController@login')->name('user.login');
+// Route::post('login-post', 'User\Auth\LoginController@loginPost')->name('user.login.post');
+// Route::get('logout', 'User\Auth\LoginController@logout')->name('user.logout.get');
+
+
 Route::get('/', function () {
     $rs_fatch = Illuminate\Support\Facades\DB::select(DB::raw("SELECT * from `template_type` limit 1"));
     return redirect()->route('template.index',[$rs_fatch[0]->temp_type,$rs_fatch[0]->lang_type]);
@@ -22,7 +28,13 @@ Route::get('{temp_id}/{lang_id}/teacher', 'Admin\TemplateController@teacher')->n
 Route::get('{temp_id}/{lang_id}/events', 'Admin\TemplateController@events')->name('template.events');
 Route::get('{temp_id}/{lang_id}/{rec_id}/events-detail', 'Admin\TemplateController@eventsDetail')->name('template.events.detail');
 Route::get('{temp_id}/{lang_id}/contact-us', 'Admin\TemplateController@contact')->name('template.contact');
-Route::get('{temp_id}/{lang_id}/registration', 'Admin\TemplateController@registration')->name('template.registration');
+Route::get('{temp_id}/{lang_id}/registration/{id}', 'Admin\TemplateController@registration')->name('template.registration');
+Route::post('registration-submit', 'Admin\TemplateController@registrationsubmit')->name('template.registration.submit');
+Route::get('registration-list', 'Admin\TemplateController@registrationlist')->name('template.registration.list');
+Route::get('otp-verify/{registration_id}', 'Admin\TemplateController@otpVerify')
+     ->name('registration.otp.verify');
+Route::post('otp-check/{registration_id}', 'Admin\TemplateController@otpCheck')
+     ->name('registration.otp.check');
 Route::get('{temp_id}/{lang_id}/calendar', 'Admin\TemplateController@calendar')->name('template.calendar');
 Route::get('{temp_id}/{lang_id}/CBSEMandatoryDisclosure', 'Admin\TemplateController@CBSEMandatoryDisclosure')->name('template.CBSEMandatoryDisclosure');
 

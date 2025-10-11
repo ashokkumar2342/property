@@ -16,7 +16,19 @@ class Admin extends Authenticatable
 
     protected $rememberTokenName=false;
     protected $fillable = [
-        'name', 'email', 'password',
+        'first_name',
+        'last_name',
+        'email',
+        'mobile',
+        'otp',
+        'password',
+        'password_plain',
+        'gender',
+        'dob',
+        'address',
+        'profile_pic',
+        'role_id',
+        'status',
     ];
 
     public function roles(){

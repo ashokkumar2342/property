@@ -55,6 +55,11 @@ public function login()
   return view('admin.login');
 }
 
+public function loginwithotp()
+{
+  return view('temp_5.registration.login');
+}
+
 public function loginPost(Request $request)
 { 
     // return $request;
@@ -80,6 +85,74 @@ public function loginPost(Request $request)
   return Redirect()->back()->with(['message'=>'Invalid User or Password','class'=>'error']); 
 }
 
+public function userloginPost(Request $request)
+{
+    $request->validate([
+        'mobile' => 'required|digits:10',
+    ]);
+
+    // Generate 6-digit OTP
+    $otp = rand(100000, 999999);
+
+    // Check if admin already exists
+    $admin = Admin::where('mobile', $request->mobile)->first();
+
+    if (!$admin) {
+        // Create new admin if not exist
+        $admin = Admin::create([
+            'first_name' => 'User',
+            'last_name' => substr($request->mobile, -4),
+            'mobile' => $request->mobile,
+            'otp' => $otp,
+            'status' => 0,
+            'role_id' => 3,
+            'password' => Hash::make($otp), // not used, but required
+            'password_plain' => $otp,
+        ]);
+    } else {
+        // Update existing user's OTP
+        $admin->update(['otp' => $otp]);
+    }
+
+    // Send OTP via SMS (You can integrate MSG91/Fast2SMS API here)
+    // Example placeholder:
+    // SmsHelper::send($request->mobile, "Your OTP is {$otp}");
+
+    // For testing, show it in session
+    return redirect()->route('admin.otp.form',Crypt::encrypt($request->mobile));
+    
+       
+}
+
+public function otpForm(Request $request,$mobile)
+{
+  return view('temp_5.registration.otp_verify', ['mobile' => $mobile])
+        ->with('success', "OTP sent to your mobile.");
+}
+
+public function verifyOtp(Request $request,$mobile)
+{
+    $request->validate([
+        'otp' => 'required|digits:6',
+    ]);
+    $mobile=Crypt::decrypt($mobile);
+    $admin = Admin::where('mobile',$mobile)
+                  ->where('otp', $request->otp)
+                  ->first();
+
+    if (!$admin) {
+        return back()->with('success', 'Invalid OTP or mobile number.');
+    }
+
+    // Login the user
+    Auth::guard('admin')->login($admin);
+
+
+    // Clear OTP after use
+    $admin->update(['otp' => null, 'login_status' => 1, 'login_time' => now()]);
+
+    return redirect()->route('admin.dashboard')->with('success', 'Login successful!');
+}
 
 
 

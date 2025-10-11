@@ -50,7 +50,8 @@ class TemplateController extends Controller
         $l_lang_type = $lang_type;
 
         if ($l_temp_type == 1) {
-            return view('temp_5.index', compact('l_lang_type'));
+           $result_rs = DB::select(DB::raw("SELECT * FROM `projects`"));
+            return view('temp_5.index', compact('l_lang_type','result_rs'));
         }elseif ($l_temp_type == 2) {
             return view('temp_2.index', compact('l_lang_type'));
         }elseif ($l_temp_type == 3) {
@@ -195,13 +196,15 @@ class TemplateController extends Controller
         }
     }
     //registration
-    public function registration($temp_type, $lang_type)
+    public function registration($temp_type, $lang_type,$project_id)
     { 
         $l_temp_type = $temp_type;
         $l_lang_type = $lang_type;
 
+        // $result_rs = DB::select(DB::raw("SELECT * FROM `projects`"));
+
         if ($l_temp_type == 1) {
-            return view('temp_5.registration.registration', compact('l_lang_type'));
+            return view('temp_5.registration.registration', compact('l_lang_type',',project_id'));
         }elseif ($l_temp_type == 2) {
             return view('temp_2.contact.contact_us', compact('l_lang_type'));
         }elseif ($l_temp_type == 3) {
@@ -374,6 +377,109 @@ class TemplateController extends Controller
         }else{
             return 'something went wrong';
         }
+    } 
+
+   public function registrationsubmit(Request $request)
+   {
+       $request->validate([
+           'applicant_name' => 'required|string|max:255',
+           'father_name_husband_name' => 'required|string|max:255',
+           'date_of_birth' => 'required|date',
+           'phone_number' => 'required|string|max:15',
+           'email' => 'required|email|max:255',
+           'reference_code' => 'nullable|string|max:50',
+           'aadhar_card_number' => 'required|string|max:20',
+           'pan_card_number' => 'required|string|max:20',
+           'address' => 'required|string|max:500',
+           'city' => 'required|string|max:100',
+           'state' => 'required|string|max:100',
+           'pincode' => 'required|string|max:10',
+           'quota' => 'required|string|max:50',
+           'terms_conditions' => 'accepted',
+       ]);
+
+      // Insert data into registration table
+          DB::insert("
+              INSERT INTO property_registration 
+              (project_id, applicant_name, father_name_husband_name, date_of_birth, phone_number, email, reference_code, aadhar_card_number, pan_card_number, address, city, state, pincode, quota, created_at, updated_at) 
+              VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())
+          ", [
+              $request->project_id,
+              $request->applicant_name,
+              $request->father_name_husband_name,
+              $request->date_of_birth,
+              $request->phone_number,
+              $request->email,
+              $request->reference_code,
+              $request->aadhar_card_number,
+              $request->pan_card_number,
+              $request->address,
+              $request->city,
+              $request->state,
+              $request->pincode,
+              $request->quota,
+              $request->size,
+              $request->terms_conditions ? 1 : 0
+          ]);
+
+          // Get last inserted ID
+          $id = DB::getPdo()->lastInsertId();
+
+          // Generate OTP
+          $otp = rand(100000, 999999);
+
+          // Store OTP in session or DB
+          session(['otp' => $otp, 'registration_id' => $id]);
+
+          // Redirect to OTP verify page
+
+          return redirect()->route('registration.otp.verify', $id);
+
+       // ⚡ Send OTP to phone/email (implement later)
+       // $otp = rand(100000, 999999);
+       // store OTP in session or DB
+
+       // Redirect to OTP verify page
+       // return redirect()->route('registration.otp.verify', $registration->id);
+   }
+
+   // ✅ OTP Verify Page
+   public function otpVerify($id)
+   {
+       // Get registration id from URL
+       // You can also pass OTP from session to view
+       $otp = session('otp');
+
+       return view('temp_5.registration.otp_verify', [
+           'id' => $id,
+           'otp' => $otp // optional, just for testing
+       ]);
+   }
+
+   // ✅ OTP Submit / Check
+   public function otpCheck(Request $request)
+   {
+       $request->validate([
+           'otp' => 'required|numeric',
+       ]);
+
+       if ($request->otp == 123456) {
+           // OTP matched ✅
+           // Mark registration as verified in DB if needed
+           return redirect()->route('template.registration.list');
+       }
+
+       // OTP failed ❌
+       return back()->withErrors(['otp' => 'Invalid OTP, please try again.']);
+   }
+
+    // ✅ OTP Submit / Check
+   public function registrationlist(Request $request)
+   {
+      
+        return redirect()->route('template.registration.list');
     }
+
+
 
 }
