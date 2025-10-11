@@ -53,7 +53,7 @@ $rs_school_detail = App\Helper\WebHelper::getSchoolDetail();
 
                         <form action="{{ route('template.registration.submit') }}" method="post" button-click="btn_close"  enctype="multipart/form-data">
                          {{ csrf_field() }}
-                            <input type="hidden" name="project_id">
+                            <input type="hidden" name="project_id" value="{{$project_id}}">
                             <div class="row g-3">
                                 <div class="col-md-6">
                                     <label class="form-label">Applicant Name</label>

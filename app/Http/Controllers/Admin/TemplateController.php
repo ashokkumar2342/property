@@ -6,6 +6,10 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Helper\MyFuncs;
 use DB;
+use App\Admin;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Support\Facades\Crypt;
 
 class TemplateController extends Controller
 {
@@ -204,7 +208,7 @@ class TemplateController extends Controller
         // $result_rs = DB::select(DB::raw("SELECT * FROM `projects`"));
 
         if ($l_temp_type == 1) {
-            return view('temp_5.registration.registration', compact('l_lang_type',',project_id'));
+            return view('temp_5.registration.registration', compact('l_lang_type','project_id'));
         }elseif ($l_temp_type == 2) {
             return view('temp_2.contact.contact_us', compact('l_lang_type'));
         }elseif ($l_temp_type == 3) {
@@ -380,68 +384,85 @@ class TemplateController extends Controller
     } 
 
    public function registrationsubmit(Request $request)
-   {
-       $request->validate([
-           'applicant_name' => 'required|string|max:255',
-           'father_name_husband_name' => 'required|string|max:255',
-           'date_of_birth' => 'required|date',
-           'phone_number' => 'required|string|max:15',
-           'email' => 'required|email|max:255',
-           'reference_code' => 'nullable|string|max:50',
-           'aadhar_card_number' => 'required|string|max:20',
-           'pan_card_number' => 'required|string|max:20',
-           'address' => 'required|string|max:500',
-           'city' => 'required|string|max:100',
-           'state' => 'required|string|max:100',
-           'pincode' => 'required|string|max:10',
-           'quota' => 'required|string|max:50',
-           'terms_conditions' => 'accepted',
-       ]);
+    {
+        $request->validate([
+            'applicant_name' => 'required|string|max:255',
+            'father_name_husband_name' => 'required|string|max:255',
+            'date_of_birth' => 'required|date',
+            'phone_number' => 'required|string|max:15',
+            'email' => 'required|email|max:255',
+            'reference_code' => 'nullable|string|max:50',
+            'aadhar_card_number' => 'required|string|max:20',
+            'pan_card_number' => 'required|string|max:20',
+            'address' => 'required|string|max:500',
+            'city' => 'required|string|max:100',
+            'state' => 'required|string|max:100',
+            'pincode' => 'required|string|max:10',
+            'quota' => 'required|string|max:50',
+            'terms_conditions' => 'accepted',
+        ]);
 
-      // Insert data into registration table
-          DB::insert("
-              INSERT INTO property_registration 
-              (project_id, applicant_name, father_name_husband_name, date_of_birth, phone_number, email, reference_code, aadhar_card_number, pan_card_number, address, city, state, pincode, quota, created_at, updated_at) 
-              VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())
-          ", [
-              $request->project_id,
-              $request->applicant_name,
-              $request->father_name_husband_name,
-              $request->date_of_birth,
-              $request->phone_number,
-              $request->email,
-              $request->reference_code,
-              $request->aadhar_card_number,
-              $request->pan_card_number,
-              $request->address,
-              $request->city,
-              $request->state,
-              $request->pincode,
-              $request->quota,
-              $request->size,
-              $request->terms_conditions ? 1 : 0
-          ]);
+        DB::beginTransaction();
 
-          // Get last inserted ID
-          $id = DB::getPdo()->lastInsertId();
+        try {
+            // 1️⃣ Check if user already exists
+            $user = Admin::where('email', $request->email)
+                        ->orWhere('mobile', $request->phone_number)
+                        ->first();
 
-          // Generate OTP
-          $otp = rand(100000, 999999);
+            if (!$user) {
+                // 2️⃣ Create new user
+                $user = Admin::create([
+                    'name' => $request->applicant_name,
+                    'email' => $request->email,
+                    'mobile' => $request->phone_number,
+                    'password' => Hash::make(rand(100000, 999999)), // random password
+                    'status' => 1,
+                ]);
+            }
 
-          // Store OTP in session or DB
-          session(['otp' => $otp, 'registration_id' => $id]);
+            // 3️⃣ Generate OTP
+            $otp = rand(100000, 999999);
 
-          // Redirect to OTP verify page
+            // Optional: store OTP in user table for verification
+            $user->update(['otp' => $otp]);
 
-          return redirect()->route('registration.otp.verify', $id);
+            // 4️⃣ Insert registration data
+            $id = DB::table('property_registration')->insertGetId([
+                'user_id' => $user->id,
+                'project_id' => $request->project_id,
+                'applicant_name' => $request->applicant_name,
+                'father_name_husband_name' => $request->father_name_husband_name,
+                'date_of_birth' => $request->date_of_birth,
+                'phone_number' => $request->phone_number,
+                'email' => $request->email,
+                'reference_code' => $request->reference_code,
+                'aadhar_card_number' => $request->aadhar_card_number,
+                'pan_card_number' => $request->pan_card_number,
+                'address' => $request->address,
+                'city' => $request->city,
+                'state' => $request->state,
+                'pincode' => $request->pincode,
+                'quota' => $request->quota,
+                'terms_conditions' => $request->terms_conditions ? 1 : 0,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
 
-       // ⚡ Send OTP to phone/email (implement later)
-       // $otp = rand(100000, 999999);
-       // store OTP in session or DB
+            DB::commit();
 
-       // Redirect to OTP verify page
-       // return redirect()->route('registration.otp.verify', $registration->id);
-   }
+            // 5️⃣ Store OTP and registration id in session (optional)
+            session(['otp' => $otp, 'registration_id' => $id]);
+
+            // 6️⃣ Redirect to OTP verify view
+            return view('temp_5.registration.otp_verify', ['mobile' => Crypt::encrypt($request->phone_number)])
+                ->with('success', "OTP sent to your mobile.");
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->with('error', 'Something went wrong: ' . $e->getMessage());
+        }
+    }
 
    // ✅ OTP Verify Page
    public function otpVerify($id)

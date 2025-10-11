@@ -135,7 +135,9 @@ class BladeEditorController extends Controller
                 'created_at' => now(), // Automatically adds the timestamp
                 'updated_at' => now(), // Automatically adds the timestamp
             ]);
-
+            dd('d');
+            return view('temp_5.registration.otp_verify', ['mobile' => $validated['phone_number']])
+        ->with('success', "OTP sent to your mobile.");
             // Return a response, for example redirecting back or displaying a success message
             return redirect()->route('property.register')->with('success', 'Registration successful!');
         }
