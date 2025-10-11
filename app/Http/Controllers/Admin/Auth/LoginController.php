@@ -162,7 +162,8 @@ public function verifyOtp(Request $request,$mobile)
 public function logout()
 {
   $this->guard()->logout();
-  return redirect()->route('admin.login');
+  $rs_fatch = Illuminate\Support\Facades\DB::select(DB::raw("SELECT * from `template_type` limit 1"));
+  return redirect()->route('template.index',[$rs_fatch[0]->temp_type,$rs_fatch[0]->lang_type]);
 }
 
 // defining auth  guard

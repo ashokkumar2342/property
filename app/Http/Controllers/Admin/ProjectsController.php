@@ -18,7 +18,12 @@ class ProjectsController extends Controller
 
     public function index()
     {
-        $rs_records = DB::select(DB::raw("SELECT `p`.`id`, `p`.`name`, `p`.`license_no`, `p`.`email_id`, `p`.`mobile_no`, `p`.`latitude`, `p`.`longitude`, date_format(`p`.`start_date`, '%d-%m-%Y') as `s_date`, date_format(`p`.`end_date`, '%d-%m-%Y') as `e_date`, `dt`.`name` as `d_name`, `p`.`file_path` from `projects` `p` inner join `document_types` `dt` on `dt`.`id` = `p`.`document_id` order by `name`;"));
+        $user_id = MyFuncs::getUserId();
+        if ($user_id == 1) {
+            $rs_records = DB::select(DB::raw("SELECT `p`.`id`, `p`.`name`, `p`.`license_no`, `p`.`email_id`, `p`.`mobile_no`, `p`.`latitude`, `p`.`longitude`, date_format(`p`.`start_date`, '%d-%m-%Y') as `s_date`, date_format(`p`.`end_date`, '%d-%m-%Y') as `e_date`, `dt`.`name` as `d_name`, `p`.`file_path` from `projects` `p` inner join `document_types` `dt` on `dt`.`id` = `p`.`document_id` order by `name`;"));
+        }else{
+            $rs_records = DB::select(DB::raw("SELECT `p`.`id`, `p`.`name`, `p`.`license_no`, `p`.`email_id`, `p`.`mobile_no`, `p`.`latitude`, `p`.`longitude`, date_format(`p`.`start_date`, '%d-%m-%Y') as `s_date`, date_format(`p`.`end_date`, '%d-%m-%Y') as `e_date`, `dt`.`name` as `d_name`, `p`.`file_path` from `projects` `p` inner join `document_types` `dt` on `dt`.`id` = `p`.`document_id` where `user_id` = $user_id order by `name`;"));
+        }
         return view('admin.projects.index', compact('rs_records'));
     }
 
