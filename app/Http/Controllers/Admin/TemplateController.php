@@ -458,54 +458,54 @@ class TemplateController extends Controller
 
                 
             // $whatsapp_no = $request->phone_number
-            $otp = $otp;
-            $template_name = 'mobile_verification_1';
-            $language = 'en';
-            $mobile_no = "918210228581";
+            // $otp = $otp;
+            // $template_name = 'mobile_verification_1';
+            // $language = 'en';
+            // $mobile_no = "918210228581";
                 
-            $api_url = "https://graph.facebook.com/v22.0/556373910894421/messages";
-            $access_token = 'EAAQXcnfzD88BOZBKxyWDrzKS6IJhaQXOvFW3TQHhQ6kedjRQFLI4wh4KhrJl6nSMIfzYJcHujItGVdze68ZCrydzmA9vetvfOgA0bgXePeRBgkgJuGLLAdfckkg9rNNrlSDjym9F9heqPJv9q3nh318zi2lI2hf2jffEMTLGdoG9gMocJuT2Y2rSH7gR62CwZDZD'; 
+            // $api_url = "https://graph.facebook.com/v22.0/556373910894421/messages";
+            // $access_token = 'EAAQXcnfzD88BOZBKxyWDrzKS6IJhaQXOvFW3TQHhQ6kedjRQFLI4wh4KhrJl6nSMIfzYJcHujItGVdze68ZCrydzmA9vetvfOgA0bgXePeRBgkgJuGLLAdfckkg9rNNrlSDjym9F9heqPJv9q3nh318zi2lI2hf2jffEMTLGdoG9gMocJuT2Y2rSH7gR62CwZDZD'; 
 
-            $body_parameters = [
-                ['type' => 'text', 'text' => $otp],
-            ];
+            // $body_parameters = [
+            //     ['type' => 'text', 'text' => $otp],
+            // ];
 
-            $data = [
-                'messaging_product' => 'whatsapp',
-                'recipient_type' => 'individual',
-                'to' => $mobile_no,
-                'type' => 'template',
-                'template' => [
-                    'name' => $template_name,
-                    'language' => ['code' => $language],
-                    'components' => [
-                        [
-                            'type' => 'body',
-                            'parameters' => $body_parameters,
-                        ]
-                    ],
-                ],
-            ];
+            // $data = [
+            //     'messaging_product' => 'whatsapp',
+            //     'recipient_type' => 'individual',
+            //     'to' => $mobile_no,
+            //     'type' => 'template',
+            //     'template' => [
+            //         'name' => $template_name,
+            //         'language' => ['code' => $language],
+            //         'components' => [
+            //             [
+            //                 'type' => 'body',
+            //                 'parameters' => $body_parameters,
+            //             ]
+            //         ],
+            //     ],
+            // ];
                 
 
-            // Initialize cURL session (same as before)
-            $ch = curl_init($api_url);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_POST, true);
-            curl_setopt($ch, CURLOPT_HTTPHEADER, [
-                "Authorization: Bearer " . $access_token,
-                "Content-Type: application/json",
-            ]);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+            // // Initialize cURL session (same as before)
+            // $ch = curl_init($api_url);
+            // curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            // curl_setopt($ch, CURLOPT_POST, true);
+            // curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            //     "Authorization: Bearer " . $access_token,
+            //     "Content-Type: application/json",
+            // ]);
+            // curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
 
-            // Execute the request and capture the response (same as before)
-            $response = curl_exec($ch);
-            if (curl_errno($ch)) {
-                echo 'Error: ' . curl_error($ch);
-            } else {
-                echo "Response: " . $response;
-            }
-            curl_close($ch);
+            // // Execute the request and capture the response (same as before)
+            // $response = curl_exec($ch);
+            // if (curl_errno($ch)) {
+            //     echo 'Error: ' . curl_error($ch);
+            // } else {
+            //     echo "Response: " . $response;
+            // }
+            // curl_close($ch);
 
                 
 
