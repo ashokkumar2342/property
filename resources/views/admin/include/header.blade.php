@@ -18,7 +18,9 @@
 <div class="navbar-custom-menu">
 <ul class="nav navbar-nav">
 
-<li><a href="#" title="">{{ date('d-M-Y') }}</a></li>
+<li>
+	<a href="{{ route('template.index',[1,1]) }}" style="color: #fff;">Go back to website</a>
+</li>
 <li><a href="{{ route('admin.logout.get') }}" title="">Logout</a></li>
 
 

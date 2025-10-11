@@ -70,7 +70,12 @@
 
          
           <li><a href="{{route('template.contact',[1,$l_lang_type])}}">Contact</a></li>
-          <li><a href="{{route('user.login')}}">Login</a></li>
+          <li>
+            <a href="{{ session()->has('user_id') ? route('admin.dashboard') : route('user.login') }}">
+              {{ session()->has('user_id') ? 'Dashboard' : 'Login' }}
+            </a>
+          </li>
+          {{-- <li><a href="{{route('user.login')}}">Login</a></li> --}}
         </ul>
         <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
       </nav>

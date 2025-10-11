@@ -31,6 +31,7 @@
   <link href="{!! asset('admin_asset/dist/css/bootstrap-multiselect.css') !!}"  rel="stylesheet" type="text/css">
   <link href="{!! asset('admin_asset/dist/css/summernote.css') !!}"  rel="stylesheet" type="text/css">
   <link href="{!! asset('admin_asset/dist/css/croppie.css') !!}"  rel="stylesheet" type="text/css">
+  <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.15/css/jquery.dataTables.min.css">
   
    
   
@@ -139,6 +140,7 @@
  <script src={!! asset('admin_asset/dist/js/summernote.js?ver=1') !!}></script>
  <script src={!! asset('admin_asset/dist/js/croppie.js?ver=1') !!}></script>
  <script src={!! asset('admin_asset/dist/js/loader.js') !!}></script>
+ <script type="text/javascript" src="//cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
    
 {{--     <script defer src="https://use.fontawesome.com/releases/v5.0.8/js/all.js"></script> --}}
 

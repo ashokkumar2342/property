@@ -111,4 +111,11 @@ Route::group(['middleware' => 'admin'], function() {
 		    Route::post('p-store/{id}', 'ProjectsController@store')->name('admin.projects.store');
 		    Route::get('p-delete/{id}', 'ProjectsController@delete')->name('admin.projects.delete');
 		});
+
+		//Registration
+		Route::prefix('registration')->group(function () {
+		    Route::get('r-index', 'RegistrationController@index')->name('admin.registration.index');
+		    Route::get('r-form/{id}', 'RegistrationController@addform')->name('admin.registration.form');
+		    Route::post('r-store/{id}', 'RegistrationController@store')->name('admin.registration.store');
+		});
 });
