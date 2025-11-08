@@ -194,7 +194,7 @@
 <!-- ============================= -->
 <section id="property-filter" class="py-4 bg-light border-bottom">
   <div class="container">
-    <form id="propertyFilterForm" method="GET" action="{{ route('property.search') }}" class="row g-3 align-items-end">
+    <form id="propertyFilterForm" method="GET" action="#" class="row g-3 align-items-end">
 
       <!-- State -->
       <div class="col-md-3">
