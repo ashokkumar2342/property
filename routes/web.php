@@ -47,7 +47,6 @@ Route::get('{temp_id}/{lang_id}/fount-infrastructure', 'Admin\TemplateController
 Route::get('{temp_id}/{lang_id}/fount-notice', 'Admin\TemplateController@notice')->name('template.notice'); 
 
 Route::post('property-search', 'Admin\TemplateController@index')->name('property.search');
-Route::get('/property-image/{id}', [PropertyImageController::class, 'show'])->name('property.image.show');
 Route::get('image-show/{id}', 'Admin\TemplateController@imageshow')->name('property.image.show');
 Route::get('property-details/{id}', 'Admin\TemplateController@propertyDetails')->name('property.details.show');
 

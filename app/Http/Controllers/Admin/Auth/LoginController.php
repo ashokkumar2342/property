@@ -162,7 +162,7 @@ public function verifyOtp(Request $request,$mobile)
 public function logout()
 {
   $this->guard()->logout();
-  $rs_fatch = Illuminate\Support\Facades\DB::select(DB::raw("SELECT * from `template_type` limit 1"));
+  $rs_fatch = DB::select(DB::raw("SELECT * from `template_type` limit 1"));
   return redirect()->route('template.index',[$rs_fatch[0]->temp_type,$rs_fatch[0]->lang_type]);
 }
 

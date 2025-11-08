@@ -308,7 +308,7 @@
                <div class="col-md-3">
                    <div class="top-img position-relative">
                        @if($property->image)
-                           <img src="{{ route('property.image.show', ['id' => $property->id]) }}" 
+                           <img src="{{ route('property.image.show', ['id' => $property->last_image_id]) }}" 
                                 alt="Property Image" height="200px" width="200px">
                        @else
                            <img src="{{ asset('images/no-image.png') }}" alt="No Image" class="w-100 rounded">
