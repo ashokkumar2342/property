@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
+use App\Helper\MyFuncs;
 class LoginController extends Controller
 {
 /*
@@ -119,6 +120,7 @@ public function userloginPost(Request $request)
     // SmsHelper::send($request->mobile, "Your OTP is {$otp}");
 
     // For testing, show it in session
+    MyFuncs::whatsappotp($request->mobile,$otp);
     return redirect()->route('admin.otp.form',Crypt::encrypt($request->mobile));
     
        
