@@ -118,4 +118,19 @@ Route::group(['middleware' => 'admin'], function() {
 		    Route::get('r-form/{id}', 'RegistrationController@addform')->name('admin.registration.form');
 		    Route::post('r-store/{id}', 'RegistrationController@store')->name('admin.registration.store');
 		});
+
+				// Properties Module
+		Route::prefix('properties')->group(function () {
+		    Route::get('p-index', 'PropertiesController@index')->name('admin.properties.index');
+		    Route::get('p-form/{id}', 'PropertiesController@addform')->name('admin.properties.form');
+		    Route::post('p-store/{id}', 'PropertiesController@store')->name('admin.properties.store');
+		    Route::get('p-delete/{id}', 'PropertiesController@delete')->name('admin.properties.delete');
+		});
+					// Image  Module
+		Route::prefix('images')->group(function () {
+		    Route::get('images-form-show/{id}', 'PropertiesController@imagesFormShow')->name('admin.image.form');
+		   
+		    Route::post('img-store/{id}', 'PropertiesController@storeImage')->name('admin.propertiesImage.store');
+		   
+		});
 });

@@ -189,6 +189,204 @@
       </div>
     </div>
   </section><!-- /Editable Banner Section -->
+<!-- ============================= -->
+<!-- 🔍 Advanced Property Filter -->
+<!-- ============================= -->
+<section id="property-filter" class="py-4 bg-light border-bottom">
+  <div class="container">
+    <form id="propertyFilterForm" method="GET" action="{{ route('property.search') }}" class="row g-3 align-items-end">
+
+      <!-- State -->
+      <div class="col-md-3">
+        <label class="form-label fw-bold">State</label>
+        <select id="state" name="state_id" class="form-select" onchange="fetchCities(this.value)">
+          <option value="">Select State</option>
+          @foreach($states as $state)
+            <option value="{{ $state->id }}">{{ $state->name }}</option>
+          @endforeach
+        </select>
+      </div>
+
+      <!-- City -->
+      <div class="col-md-3">
+        <label class="form-label fw-bold">City</label>
+        <select id="city" name="city_id" class="form-select" onchange="fetchLocalities(this.value)">
+          <option value="">Select City</option>
+        </select>
+      </div>
+
+      <!-- Locality -->
+      <div class="col-md-3">
+        <label class="form-label fw-bold">Locality</label>
+        <select id="locality" name="locality_id" class="form-select">
+          <option value="">Select Locality</option>
+        </select>
+      </div>
+
+      <!-- Property Type -->
+      <div class="col-md-3">
+        <label class="form-label fw-bold">Property Type</label>
+        <select name="type" class="form-select">
+          <option value="">All Types</option>
+          <option value="flat">Flat</option>
+          <option value="house">Independent House</option>
+          <option value="villa">Villa</option>
+          <option value="plot">Plot</option>
+          <option value="commercial">Commercial</option>
+        </select>
+      </div>
+
+      <!-- Budget -->
+      <div class="col-md-3">
+        <label class="form-label fw-bold">Budget</label>
+        <select name="budget" class="form-select">
+          <option value="">Any Budget</option>
+          <option value="5000000">Up to ₹50 Lakhs</option>
+          <option value="10000000">₹50L - ₹1Cr</option>
+          <option value="20000000">₹1Cr - ₹2Cr</option>
+          <option value="50000000">Above ₹2Cr</option>
+        </select>
+      </div>
+
+      <!-- Loan Availability -->
+      <div class="col-md-3 d-flex align-items-center">
+        <label class="form-check-label me-3 fw-bold">Loan Available</label>
+        <div class="form-check form-switch">
+          <input type="checkbox" name="loan_available" value="1" class="form-check-input">
+        </div>
+      </div>
+
+      <!-- More Filters (bedrooms, bathrooms, area) -->
+      <div class="col-md-3">
+        <label class="form-label fw-bold">Bedrooms</label>
+        <select name="bedrooms" class="form-select">
+          <option value="">Any</option>
+          @for($i=1;$i<=6;$i++)
+            <option value="{{ $i }}">{{ $i }}+</option>
+          @endfor
+        </select>
+      </div>
+
+      <div class="col-md-3">
+        <label class="form-label fw-bold">Bathrooms</label>
+        <select name="bathrooms" class="form-select">
+          <option value="">Any</option>
+          @for($i=1;$i<=6;$i++)
+            <option value="{{ $i }}">{{ $i }}+</option>
+          @endfor
+        </select>
+      </div>
+
+      <div class="col-md-3">
+        <label class="form-label fw-bold">Area (sqft)</label>
+        <select name="area" class="form-select">
+          <option value="">Any</option>
+          <option value="1000">Up to 1000</option>
+          <option value="2000">1000–2000</option>
+          <option value="3000">2000–3000</option>
+          <option value="5000">Above 3000</option>
+        </select>
+      </div>
+
+      <!-- Submit -->
+      <div class="col-md-3">
+        <button type="submit" class="btn btn-primary w-100">
+          <i class="bi bi-search"></i> Search Properties
+        </button>
+      </div>
+
+    </form>
+  </div>
+</section>
+
+<section>
+    <div class="container mt-4">
+        @foreach ($properties as $property)
+        <div class="card p-2 mb-3">
+            <div class="row">
+                <!-- Image Section -->
+               <div class="col-md-3">
+                   <div class="top-img position-relative">
+                       @if($property->image)
+                           <img src="{{ route('property.image.show', ['id' => $property->id]) }}" 
+                                alt="Property Image" height="200px" width="200px">
+                       @else
+                           <img src="{{ asset('images/no-image.png') }}" alt="No Image" class="w-100 rounded">
+                       @endif
+
+                       <div class="auction-tag position-absolute top-0 start-0 bg-warning text-dark px-2 py-1 rounded-end">
+                           {{ $property->property_status ?? 'Upcoming Auction' }}
+                       </div>
+                   </div>
+               </div>
+
+
+                <!-- Details Section -->
+                <div class="col-md-9">
+                    <div class="click-card">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <h5 class="mb-0">{{ $property->title }}</h5>
+                            <a href="#" class="text-danger"><i class="far fa-heart"></i></a>
+                        </div>
+
+                        <div class="p-key-point d-flex flex-wrap">
+                            <div class="me-4">
+                                <strong>Carpet Area:</strong> {{ $property->carpet_area ?? 'N/A' }} sq.ft
+                            </div>
+                            <div class="me-4">
+                                <strong>Possession:</strong> {{ $property->possession_status ?? 'N/A' }}
+                            </div>
+                            <div class="me-4">
+                                <strong>Type:</strong> {{ $property->type_of_action ?? 'N/A' }}
+                            </div>
+                        </div>
+
+                        <div class="d-flex flex-wrap my-2">
+                            <div class="me-4">
+                                <strong>State:</strong> {{ $property->state_name ?? '-' }}
+                            </div>
+                            <div class="me-4">
+                                <strong>District:</strong> {{ $property->district_name ?? '-' }}
+                            </div>
+                            <div class="me-4">
+                                <strong>City:</strong> {{ $property->city_name ?? '-' }}
+                            </div>
+                        </div>
+
+                        <div class="d-flex flex-wrap my-2">
+                            <div class="me-4">
+                                <strong>Auction Start:</strong> {{ $property->auction_start_datetime ?? '-' }}
+                            </div>
+                            <div class="me-4">
+                                <strong>Auction End:</strong> {{ $property->auction_end_datetime ?? '-' }}
+                            </div>
+                            <div class="me-4">
+                                <strong>EMD End:</strong> {{ $property->emd_end_datetime ?? '-' }}
+                            </div>
+                        </div>
+
+                        <div class="bank-details d-flex justify-content-between align-items-center border-top pt-2">
+                            <div><strong>{{ $property->bank_name ?? 'Bank' }}</strong></div>
+                            <div><strong>Property ID:</strong> {{ $property->property_system_id ?? '-' }}</div>
+                        </div>
+
+                        <div class="p-price py-2 d-flex justify-content-between align-items-center">
+                            <div class="price text-success fw-bold">
+                                ₹ {{ number_format($property->base_price, 2) }}
+                            </div>
+                            <div class="d-flex gap-2">
+                                <a href="{{route('property.details.show',Crypt::encrypt($property->id))}}" class="btn btn-primary btn-sm">View Details</a>
+                                <a href="#" class="btn btn-outline-primary btn-sm">Contact Us</a>
+                                <a href="#" class="btn btn-outline-success btn-sm">Interested?</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @endforeach
+    </div>
+</section>
 
 <!-- Hero Section -->
 <section class="section bg-gradient py-5">

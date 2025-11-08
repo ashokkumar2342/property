@@ -54,18 +54,121 @@ class TemplateController extends Controller
         $l_lang_type = $lang_type;
 
         if ($l_temp_type == 1) {
-           $result_rs = DB::select(DB::raw("SELECT * FROM `projects`"));
-            return view('temp_5.index', compact('l_lang_type','result_rs'));
-        }elseif ($l_temp_type == 2) {
+            $result_rs = DB::select(DB::raw("SELECT * FROM `projects`"));
+            $states = DB::table('states')->orderBy('name')->get();
+
+            $properties = DB::table('properties')
+                ->leftJoin('property_types', 'properties.property_type_id', '=', 'property_types.id')
+                ->leftJoin('property_statuses', 'properties.status_id', '=', 'property_statuses.id')
+                ->leftJoin('states', 'properties.state_id', '=', 'states.id')
+                ->leftJoin('districts', 'properties.district_id', '=', 'districts.id')
+                ->leftJoin('cities', 'properties.city_id', '=', 'cities.id')
+                ->leftJoin('property_images', 'properties.id', '=', 'property_images.property_id')
+                ->select(
+                    'properties.*',
+                    'property_types.name as property_type',
+                    'property_statuses.name as property_status',
+                    'states.name as state_name',
+                    'districts.name as district_name',
+                    'cities.name as city_name',
+                    DB::raw('MAX(property_images.id) as last_image_id')
+                )
+                ->groupBy(
+                    'properties.id',
+                    'property_types.name',
+                    'property_statuses.name',
+                    'states.name',
+                    'districts.name',
+                    'cities.name'
+                )
+                ->orderByDesc('properties.id')
+                ->get();
+
+            // Fetch the image URLs for those last_image_id values
+            foreach ($properties as $property) {
+                $image = DB::table('property_images')->where('id', $property->last_image_id)->value('image_url');
+                $property->image = $image;
+            }
+
+            return view('temp_5.index', compact('l_lang_type', 'result_rs', 'states', 'properties'));
+
+        } elseif ($l_temp_type == 2) {
             return view('temp_2.index', compact('l_lang_type'));
-        }elseif ($l_temp_type == 3) {
+
+        } elseif ($l_temp_type == 3) {
             return view('temp_3.index', compact('l_lang_type'));
-        }elseif ($l_temp_type == 4) {
+
+        } elseif ($l_temp_type == 4) {
             return view('temp_4.index', compact('l_lang_type'));
-        }else{
+
+        } else {
             return 'something went wrong';
         }
     }
+
+    public function imageshow($id)
+    {
+        $image = \DB::table('property_images')->where('id', $id)->first();
+
+        if (!$image) {
+            abort(404, 'Image record not found.');
+        }
+
+        // Trim extra spaces/newlines
+        $relativePath = trim($image->image_url);
+        $path = storage_path('app/public/' . $relativePath);
+
+        if (!file_exists($path)) {
+            abort(404, 'Image file not found at path: ' . $path);
+        }
+
+        return response()->file($path, [
+            'Content-Type' => mime_content_type($path)
+        ]);
+    }
+
+  public function propertyDetails($id)
+  {
+      try {
+          $propertyId = Crypt::decrypt($id);
+      } catch (\Exception $e) {
+          abort(404, 'Invalid property ID');
+      }
+
+      $l_lang_type = 1;
+
+      $property = DB::table('properties')
+          ->leftJoin('property_types', 'properties.property_type_id', '=', 'property_types.id')
+          ->leftJoin('property_statuses', 'properties.status_id', '=', 'property_statuses.id')
+          ->select(
+              'properties.*',
+              'property_types.name as type_name',
+              'property_statuses.name as status_name'
+          )
+          ->where('properties.id', $propertyId)
+          ->first();
+
+      if (!$property) {
+          abort(404, 'Property not found');
+      }
+
+      $images = DB::table('property_images')
+          ->where('property_id', $property->id)
+          ->get();
+
+      $similar = DB::table('properties')
+          ->where('property_type_id', $property->property_type_id)
+          ->where('id', '!=', $property->id)
+          ->limit(3)
+          ->get();
+
+      return view('temp_5.property_details', compact('property', 'images', 'similar', 'l_lang_type'));
+  }
+
+
+
+
+
 
 //about
     public function about($temp_type, $lang_type)
