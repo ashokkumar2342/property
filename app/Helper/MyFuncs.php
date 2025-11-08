@@ -247,7 +247,7 @@ class MyFuncs {
        $otp = $otp;
        $template_name = 'mobile_verification_1';
        $language = 'en';
-       $mobile_no = "918083274127";
+       $mobile_no = "91".$mobile_no;
            
        $api_url = "https://graph.facebook.com/v22.0/556373910894421/messages";
        $access_token = 'EAAQXcnfzD88BOZBKxyWDrzKS6IJhaQXOvFW3TQHhQ6kedjRQFLI4wh4KhrJl6nSMIfzYJcHujItGVdze68ZCrydzmA9vetvfOgA0bgXePeRBgkgJuGLLAdfckkg9rNNrlSDjym9F9heqPJv9q3nh318zi2lI2hf2jffEMTLGdoG9gMocJuT2Y2rSH7gR62CwZDZD'; 
@@ -256,7 +256,7 @@ class MyFuncs {
            ['type' => 'text', 'text' => $otp],
        ];
 
-       
+
 
        $data = [
              'messaging_product' => 'whatsapp',
