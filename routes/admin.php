@@ -8,6 +8,7 @@ Route::get('loginwithotp', 'Auth\LoginController@loginwithotp')->name('user.logi
 Route::post('user-login-post', 'Auth\LoginController@userloginPost')->name('user.login.post');
 Route::get('user-otp-form/{mobile}', 'Auth\LoginController@otpForm')->name('admin.otp.form');
 Route::post('user-verifyOtp/{mobile}', 'Auth\LoginController@verifyOtp')->name('admin.verify.otp');
+Route::get('refreshcaptcha', 'Auth\LoginController@refreshCaptcha')->name('admin.refresh.captcha');
 
 Route::group(['middleware' => 'admin'], function() {
     Route::post('blade/update', 'BladeEditorController@updateContent')->name('admin.blade.update');
@@ -125,6 +126,9 @@ Route::group(['middleware' => 'admin'], function() {
 		    Route::get('p-form/{id}', 'PropertiesController@addform')->name('admin.properties.form');
 		    Route::post('p-store/{id}', 'PropertiesController@store')->name('admin.properties.store');
 		    Route::get('p-delete/{id}', 'PropertiesController@delete')->name('admin.properties.delete');
+
+		    Route::get('statewisedistrict', 'PropertiesController@statewisedistrict')->name('admin.properties.statewisedistrict');
+		    Route::get('districtwisecity', 'PropertiesController@districtwisecity')->name('admin.properties.districtwisecity');
 		});
 					// Image  Module
 		Route::prefix('images')->group(function () {
