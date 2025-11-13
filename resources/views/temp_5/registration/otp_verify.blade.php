@@ -62,6 +62,18 @@ $rs_school_detail = App\Helper\WebHelper::getSchoolDetail();
                                     <input type="text" name="otp" class="form-control" required>
                                 </div>
                                 <br>
+                               <div class="form-group has-feedback">
+                                 <div class="captcha d-flex align-items-center" style="gap: 10px;">
+                                     <span>{!! captcha_img('math') !!}</span>
+                                    
+
+                                 </div>
+                               </div>
+                               <br>
+                               <div class="form-group has-feedback">
+                                  <input id="captcha" type="text" class="form-control" placeholder="Enter Captcha" name="captcha" required> 
+                                   <p class="text-danger">{{ $errors->first('captcha') }}</p>
+                               </div> 
 
                                 <div class="col-12">
                                     <button type="submit" class="form-control text-success">

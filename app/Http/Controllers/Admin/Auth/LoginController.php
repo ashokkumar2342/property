@@ -67,7 +67,7 @@ public function loginPost(Request $request)
   $this->validate($request, [
     'email' => 'required', 
     'password' => 'required',
-    // 'captcha' => 'required|captcha',
+    'captcha' => 'required|captcha',
   ]);
   $admins = Admin::where('email',$request->email)->first();
   $credentials = [
@@ -90,6 +90,7 @@ public function userloginPost(Request $request)
 {
     $request->validate([
         'mobile' => 'required|digits:10',
+        'captcha' => 'required|captcha',
     ]);
 
     // Generate 6-digit OTP
@@ -136,6 +137,7 @@ public function verifyOtp(Request $request,$mobile)
 {
     $request->validate([
         'otp' => 'required|digits:6',
+        'captcha' => 'required|captcha',
     ]);
     $mobile=Crypt::decrypt($mobile);
     $admin = Admin::where('mobile',$mobile)
@@ -204,5 +206,10 @@ public function forgetPasswordSendLink(Request $request)
   return $response;
 
 }
+
+public function refreshCaptcha()
+  {  
+    return  captcha_img('math');
+  }
 
 }

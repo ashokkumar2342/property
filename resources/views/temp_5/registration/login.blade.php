@@ -13,6 +13,24 @@ $rs_school_detail = App\Helper\WebHelper::getSchoolDetail();
 
 @extends($include_page_extends)
 @section($include_page_section)
+<style type="text/css">
+.captcha {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.captcha span img {
+  height: 40px;
+  border-radius: 4px;
+}
+
+.captcha button {
+  padding: 6px 10px;
+}
+
+</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElqsC5X3z8dHxzJzB+f7m5P5U6CkC9Ujz8+6Yk4Lvw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
 <!-- Page Title -->
 <div class="page-title light-background">
@@ -56,6 +74,19 @@ $rs_school_detail = App\Helper\WebHelper::getSchoolDetail();
                                     <input type="text" name="mobile" class="form-control" required>
                                 </div>
                                 <br>
+                               <div class="form-group has-feedback">
+                                 <div class="captcha d-flex align-items-center" style="gap: 10px;">
+                                     <span>{!! captcha_img('math') !!}</span>
+                                    
+
+                                 </div>
+                               </div>
+                               <br>
+                               <div class="form-group has-feedback">
+                                  <input id="captcha" type="text" class="form-control" placeholder="Enter Captcha" name="captcha" required> 
+                                   <p class="text-danger">{{ $errors->first('captcha') }}</p>
+                               </div>  
+                                
 
                                 <div class="col-12">
                                     <button type="submit" class="form-control text-success">
@@ -77,3 +108,18 @@ $rs_school_detail = App\Helper\WebHelper::getSchoolDetail();
 
 
 @endsection
+
+@push('scripts')
+ 
+<script type="text/javascript">
+$('#refresh').click(function(){
+  $.ajax({
+     type:'GET',
+     url:'{{ route('admin.refresh.captcha') }}',
+     success:function(data){
+        $(".captcha span").html(data);
+     }
+  });
+});
+</script>
+@endpush
